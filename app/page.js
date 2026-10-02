@@ -106,10 +106,10 @@ export default function Home() {
       </header>
 
       <main className="page">
-        {status === "idle" && editing && (
-          <div className="card stack" style={{ maxWidth: 640, margin: "24px auto" }}>
-            <h3 className="section-title">Crop and adjust</h3>
-            <ImageEditor file={file} onDone={onEdited} onCancel={() => setEditing(false)} />
+        
+                {status === "idle" && editing && (
+          <div style={{ maxWidth: 640, margin: "24px auto" }}>
+            <ImageEditor src={preview} name={file?.name || "photo.jpg"} onDone={onEdited} onCancel={() => setEditing(false)} />
           </div>
         )}
 

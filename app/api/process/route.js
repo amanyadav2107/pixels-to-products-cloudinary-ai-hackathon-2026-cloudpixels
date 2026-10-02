@@ -39,6 +39,7 @@ export async function POST(req) {
       uploadResult.public_id,
       removePrompt
     );
+    console.log("FIXED URL:", fixedUrl);
     return Response.json({
       originalUrl: uploadResult.secure_url,
       fixedUrl,
