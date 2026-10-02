@@ -9,7 +9,6 @@ export async function POST(req) {
     const file = form.get("file");
     const removePrompt = (form.get("removePrompt") || "").toString();
     const preset = (form.get("preset") || "amazon").toString();
-
     if (!file) {
       return Response.json(
         { error: "No file uploaded" },
