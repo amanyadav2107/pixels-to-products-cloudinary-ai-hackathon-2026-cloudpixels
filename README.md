@@ -167,7 +167,8 @@ Open [http://localhost:3000](http://localhost:3000). If port 3000 is busy, Next.
 **CloudPixels**: Hack India, Pixels to Products: Cloudinary AI Hackathon 2026
 
 - Aman Yadav ([@amanyadav2107](https://github.com/amanyadav2107))
-- _add teammates here_
+- Divyanshi ([@
+- Kanishka Shishodia ([KanishkaShishodia](https://github.com/KanishkaShishodia)
 
 ## License
 
