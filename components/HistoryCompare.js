@@ -2,12 +2,15 @@
 import { useEffect, useState } from "react";
 import { loadHistory } from "@/lib/history";
 
+// Hidden for now. Set to true to show the compare section again.
+const SHOW_HISTORY = false;
+
 export default function HistoryCompare() {
   const [items, setItems] = useState([]);
   const [sel, setSel] = useState([]);
 
   useEffect(() => { setItems(loadHistory()); }, []);
-  if (items.length < 2) return null;
+  if (!SHOW_HISTORY || items.length < 2) return null;
 
   const toggle = (id) =>
     setSel((s) => (s.includes(id) ? s.filter((x) => x !== id) : s.length >= 2 ? [s[1], id] : [...s, id]));

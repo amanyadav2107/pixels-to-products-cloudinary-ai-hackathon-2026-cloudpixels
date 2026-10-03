@@ -180,3 +180,7 @@ html { scroll-behavior: smooth; }
   .nav-cta { margin-left: auto; }
   .grid4 { grid-template-columns: 1fr 1fr; }
 }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.chip { padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.15); background: transparent; color: inherit; cursor: pointer; font-size: 13px; }
+.chip.on { background: #6366f1; border-color: #6366f1; color: #fff; }
+.check { display: flex; gap: 8px; align-items: center; font-size: 14px; }
