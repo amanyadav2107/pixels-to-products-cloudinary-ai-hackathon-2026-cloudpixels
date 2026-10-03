@@ -1,174 +1,128 @@
 # pixels-to-products-cloudinary-ai-hackathon-2026-cloudpixels
 Hackathon team repository for CloudPixels - [hackindia-team:pixels-to-products-cloudinary-ai-hackathon-2026:cloudpixels]
 
-# ListingFix: Listing Readiness Engine
+# ListingFix
 
-> Marketplace rejects your photos? Fix them in one click.
+**Photo audit for online sellers.** Upload a phone photo of your product, get a 0-100 score with every lost point explained, and download a cleaned-up version that is closer to what marketplaces expect.
 
-**ListingFix** helps online sellers turn a random phone photo into a marketplace-ready product image, and tells them exactly why the original wasn't ready.
+**Live demo:** https://pixels-to-products-cloudinary-ai-ha-omega.vercel.app/
 
-Built for the **Pixels to Products: Cloudinary AI Hackathon 2026** (Hack India) by team **CloudPixels**.
+**Team:** 
+- Aman Yadav ([@amanyadav2107](https://github.com/amanyadav2107)) ]
+- Divyanshi ([@divyanshisrivastava395](https://github.com/divyanshisrivastava395)) 
+- Kanishka Shishodia ([KanishkaShishodia](https://github.com/KanishkaShishodia))
 
-<!--  -->
-<!-- ![ListingFix demo](./docs/demo.png) -->
-
+Built for the Pixels to Products hackathon with Next.js and Cloudinary.
 
 ---
 
-## The Problem
+## The problem
 
-Sellers on Amazon, Instagram and other marketplaces often get listings rejected or buried because of photo issues: low resolution, a product that is too small in the frame, a cluttered background, or a hand holding the item. Most sellers don't know *what* is wrong, and fixing it means learning photo editing tools.
+Small sellers often get listings rejected or buried because the main photo breaks simple image rules: low resolution, a cluttered background, a product that is too small in the frame, or a photo that is not square. Most sellers do not know which rule they broke, and fixing it usually means learning an editor.
 
-## The Solution
+## What ListingFix does
 
-A seller uploads a raw photo. ListingFix:
-
-1. **Scores it out of 100** with clear reasons (resolution, product fill, background).
-2. **Fixes it automatically** using Cloudinary AI.
-3. Shows a **before/after view** with a **new score**.
-4. **Exports a marketplace preset**, such as an Amazon main image.
+1. **Upload** a JPG, PNG or WebP photo. Optionally crop it and adjust brightness before sending.
+2. **Pick a marketplace** (Amazon main image or Instagram post).
+3. **Tap what to remove** (for example scissors, a hand, a cup) or type your own.
+4. **Get the result:** before/after view, a score before and after, and a plain-language list of what was found and what was fixed.
+5. **Generate a caption draft**, then download the fixed image or copy its link.
 
 ## Features
 
-- **Readiness score (0-100)** with a breakdown of why the photo passes or fails
-- **Generative Remove** deletes hands and unwanted objects (type what to remove, e.g. "hand, cup")
-- **Background Removal** isolates the product
-- **Auto padding** centres the product on a pure white square
-- **Optimised delivery** with `f_auto` and `q_auto`
-- **Before/after slider** to compare the original and the fixed image
-- **Marketplace presets** such as Amazon (main image) and Instagram (post)
+| Feature | How it works |
+|---|---|
+| Photo score (0-100) | Rule-based checks run on the real image pixels, before and after the fix |
+| Reasons for every lost point | Each rule that fails shows what was wrong, the points lost, and whether we could fix it |
+| Object removal | Cloudinary Generative Remove, one pass per object you name |
+| Background removal and white background | Cloudinary background removal, trim, then pad to a 1000 x 1000 white canvas |
+| Auto-enhance | Cloudinary `improve` effect at a gentle strength |
+| "Keep my photo" mode | Skips the cut-out and only enhances and squares the photo, for cases where the cut-out is unreliable |
+| Crop and brightness editor | In the browser, before upload |
+| Before/after slider and side-by-side view | In the result screen |
+| Caption draft | Template-based draft from the product name and features you type |
+| Download and copy link | Download the fixed image or copy its URL |
 
-## How It Works
+## How the score works
 
-```
-Upload photo
-    |
-    v
-Analyse original  -->  Score (resolution, product fill, background)
-    |
-    v
-Cloudinary AI pipeline
-    1. Generative Remove   (hands / unwanted objects)
-    2. Background Removal  (isolate product)
-    3. Pad + centre on pure white square
-    4. Deliver with f_auto, q_auto
-    |
-    v
-Re-score  -->  Before/after view  -->  Export marketplace preset
-```
+The score starts at 100 and loses points for each rule that fails. The rules are visible in `lib/score.js`.
 
-## Tech Stack
+| Rule | Points | Applies to |
+|---|---|---|
+| Resolution (shortest side below the preset minimum) | 25 | All presets |
+| Background is not white | 35 | Amazon |
+| Image is not square | 10 | All presets |
+| Product fills too little of the frame | 30 | All presets |
 
-| Layer | Technology |
-| --- | --- |
-| Framework | [Next.js](https://nextjs.org/) 16 (App Router, Turbopack) |
-| UI | React 19, CSS Modules |
-| Image AI | [Cloudinary](https://cloudinary.com/) (Generative Remove, Background Removal, transformations) |
-| Image analysis | [sharp](https://sharp.pixelplumbing.com/) |
-| Linting | ESLint 9 with `eslint-config-next` |
+The "before" score is measured on your original upload. The "after" score is measured by fetching the fixed image and running the same checks on it, so the improvement is measured, not assumed.
 
-## Project Structure
+Resolution cannot be fixed by this app. If your photo is too small, the reason says so and asks you to retake it.
 
-```
-.
-├── app/
-│   ├── api/process/route.js   # Backend: scoring + Cloudinary pipeline
-│   ├── layout.js
-│   ├── page.js                # Landing page + upload UI
-│   ├── page.module.css
-│   └── globals.css
-├── components/
-│   ├── BeforeAfter.js         # Before/after comparison view
-│   └── ScoreCard.js           # Score and reasons display
-├── lib/
-│   └── chain.js               # Processing chain helpers
-├── package.json
-└── README.md
-```
+**Important:** the preset numbers (for example 1000 px minimum side and 85% fill for Amazon, 1080 px and 80% for Instagram) are **our reading of marketplace guidance, not official verified values.** They live in one place (`PRESETS` in `lib/score.js`) so they are easy to correct. ListingFix reduces rejection risk. It does not guarantee approval.
 
-## Getting Started
+## Tech stack
 
-### Prerequisites
+- **Next.js** (App Router) and React
+- **Cloudinary** for upload, background removal, generative object removal and enhancement
+- **sharp** on the server to read pixels and measure the score
+- Deployed on **Vercel**
 
-- **Node.js 20.9 or newer** (required by Next.js 16 and sharp)
-- A free **Cloudinary account** with the AI add-ons enabled (see note below)
-
-### 1. Clone the repository
+## Run it locally
 
 ```bash
-git clone https://github.com/amanyadav2107/pixels-to-products-cloudinary-ai-hackathon-2026-cloudpixels.git
-cd pixels-to-products-cloudinary-ai-hackathon-2026-cloudpixels
-```
-
-### 2. Install dependencies
-
-```bash
+git clone [YOUR REPO URL]
+cd [REPO FOLDER]
 npm install
 ```
 
-### 3. Configure environment variables
+Create a `.env.local` file in the project root with your Cloudinary credentials (use the variable names that `lib/cloudinary.js` reads):
 
-Create a `.env.local` file in the project root:
-
-```env
-CLOUDINARY_CLOUD_NAME=duqqueqbs
-CLOUDINARY_API_KEY=417111987143721
-CLOUDINARY_API_SECRET=w2lRDiOi7isRDMJfxHQjD0WweuI
+```
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
 ```
 
-You can find these values in your Cloudinary dashboard. Never commit `.env.local` to git.
-
-> **Note:** Generative Remove and Background Removal are Cloudinary AI features that may need to be enabled as add-ons on your account.
-
-### 4. Run the development server
+Then start the app:
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). If port 3000 is busy, Next.js will use 3001 and print the URL in the terminal.
+Open http://localhost:3000. To check a production build, run `npm run build`.
 
-## Available Scripts
+Never commit `.env.local`. It is listed in `.gitignore`.
 
-| Command | Description |
-| --- | --- |
-| `npm run dev` | Start the development server |
-| `npm run build` | Create a production build |
-| `npm start` | Run the production build |
-| `npm run lint` | Lint the codebase with ESLint |
+## Known limitations
 
-## Usage
+We would rather tell you than hide it:
 
-1. Drop a product photo (JPG or PNG) onto the upload area.
-2. *(Optional)* Type what to remove, for example `hand, cup`.
-3. Choose a marketplace preset (Amazon main image, Instagram post).
-4. Click the fix button and review the **before/after** view and the new score.
-5. Download the marketplace-ready image.
+- **Cut-out depends on contrast.** If the product has the same colour as the surface it sits on (for example a white shirt on a white sheet), the cut-out can remove part of the product. Use "Keep my photo" in that case, or photograph the product on a contrasting surface.
+- **Object removal works best on clearly visible, simple objects.** Very small, very large or reflective objects may be missed. It only removes what you name.
+- **A single photo can take 20 to 60 seconds**, because the server fetches the processed image again to measure the new score.
+- **The caption is a template draft, not AI-written.** Always edit it, and add real details such as material and size, so it stays accurate.
+- **Resolution cannot be improved** by this app.
+- **Each processed photo uses Cloudinary transformation credits**, including one extra background-removal pass used to measure the original photo's fill.
+- **Photos are uploaded to our Cloudinary account** for processing. Only a small history of results is kept in your own browser.
 
-## Branches
+## Future work
 
-| Branch | Purpose |
-| --- | --- |
-| `main` | Stable, combined project |
-| `frontend` | UI work |
-| `backend` | API route and Cloudinary pipeline |
+- Upload and process several photos at once
+- Detect duplicate photos before upload
+- Download all results as a ZIP
+- More marketplace presets, with values verified against official guidelines
+- Optional AI captions through a Cloudinary add-on, when enabled on the account
+- Re-enable the history compare view (built, currently hidden)
 
-## Roadmap
+## Project structure
 
-- [ ] More marketplace presets (Flipkart, Etsy, Shopify)
-- [ ] Batch upload for whole catalogues
-- [ ] AI-generated titles and descriptions for listings
-- [ ] Shadow and lighting enhancement
+```
+app/            Next.js pages and the /api/process route
+components/     Upload, editor, score gauge and card, caption box, before/after viewer
+lib/            cloudinary setup, transformation chain, scoring rules, history helpers
+public/         Sample images
+```
 
-## Team
 
-**CloudPixels**: Hack India, Pixels to Products: Cloudinary AI Hackathon 2026
 
-- Aman Yadav ([@amanyadav2107](https://github.com/amanyadav2107))
-- Divyanshi ([@divyanshisrivastava395](https://github.com/divyanshisrivastava395))
-- Kanishka Shishodia ([KanishkaShishodia](https://github.com/KanishkaShishodia))
-
----
-
-Built with Cloudinary AI and Next.js.
 
