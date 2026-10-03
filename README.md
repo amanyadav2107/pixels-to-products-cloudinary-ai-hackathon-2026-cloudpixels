@@ -9,12 +9,9 @@ Hackathon team repository for CloudPixels - [hackindia-team:pixels-to-products-c
 
 Built for the **Pixels to Products: Cloudinary AI Hackathon 2026** (Hack India) by team **CloudPixels**.
 
-<!-- <img width="1917" height="1037" alt="Screenshot 2026-10-02 232411" src="https://github.com/user-attachments/assets/2dd14b6c-8cb3-46e4-a0bf-516f161f2a91" />
- -->
+<!--  -->
 <!-- ![ListingFix demo](./docs/demo.png) -->
 
-**Live demo:** 
-**Demo video:** 
 
 ---
 
