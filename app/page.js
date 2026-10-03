@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BeforeAfter from "@/components/BeforeAfter";
 import ScoreCard from "@/components/ScoreCard";
 import ScoreGauge from "@/components/ScoreGauge";
@@ -16,6 +16,7 @@ const PRESETS = [
   { id: "amazon", label: "Amazon", sub: "Main image" },
   { id: "instagram", label: "Instagram", sub: "Post" },
 ];
+const QUICK = ["scissors", "roller", "hand", "cup", "cable", "pen"];
 
 export default function Home() {
   const [file, setFile] = useState(null);
@@ -30,6 +31,17 @@ export default function Home() {
   const [view, setView] = useState("slider");
   const [copied, setCopied] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [enhance, setEnhance] = useState(true);
+    const [cutout, setCutout] = useState(true);
+
+  const chosen = removePrompt.split(",").map((s) => s.trim()).filter(Boolean);
+    useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [status, editing]);
+  function toggleChip(word) {
+    const next = chosen.includes(word) ? chosen.filter((w) => w !== word) : [...chosen, word];
+    setRemovePrompt(next.join(", "));
+  }
 
   function onFile(f) {
     setNotice("");
@@ -63,6 +75,8 @@ export default function Home() {
     fd.append("file", file);
     fd.append("removePrompt", removePrompt);
     fd.append("preset", preset);
+    fd.append("enhance", enhance ? "1" : "0");
+    fd.append("cutout", cutout ? "1" : "0");
     try {
       const res = await fetch("/api/process", { method: "POST", body: fd });
       const data = await res.json();
@@ -106,8 +120,7 @@ export default function Home() {
       </header>
 
       <main className="page">
-        
-                {status === "idle" && editing && (
+        {status === "idle" && editing && (
           <div style={{ maxWidth: 640, margin: "24px auto" }}>
             <ImageEditor src={preview} name={file?.name || "photo.jpg"} onDone={onEdited} onCancel={() => setEditing(false)} />
           </div>
@@ -123,28 +136,78 @@ export default function Home() {
               </div>
 
               <div className="card stack upload-card">
-                <UploadZone file={file} preview={preview} onFile={onFile} onInvalid={setNotice} />
-                {file && <button className="btn btn-ghost" onClick={() => setEditing(true)}>Crop and adjust brightness</button>}
-                {notice && <div className="notice">{notice}</div>}
-
                 <div>
-                  <label className="label">What should we remove? (optional)</label>
-                  <input type="text" placeholder="for example: hand, cup" value={removePrompt} onChange={(e) => setRemovePrompt(e.target.value)} />
+                  <label className="label">Step 1: Add your photo</label>
+                  <UploadZone file={file} preview={preview} onFile={onFile} onInvalid={setNotice} />
+                  {file && (
+                    <button className="btn btn-ghost" style={{ marginTop: 8 }} onClick={() => setEditing(true)}>
+                      Crop and adjust brightness
+                    </button>
+                  )}
+                  {notice && <div className="notice">{notice}</div>}
                 </div>
 
                 <div>
-                  <label className="label">Marketplace</label>
+                  <label className="label">Step 2: Choose where you will sell</label>
                   <div className="presets">
                     {PRESETS.map((p) => (
-                      <button key={p.id} type="button" className={"preset" + (preset === p.id ? " active" : "")} onClick={() => setPreset(p.id)}>
-                        <b>{p.label}</b><small>{p.sub}</small>
+                      <button
+                        key={p.id}
+                        type="button"
+                        className={"preset" + (preset === p.id ? " active" : "")}
+                        onClick={() => setPreset(p.id)}
+                      >
+                        <b>{p.label}</b>
+                        <small>{p.sub}</small>
                       </button>
                     ))}
                   </div>
                 </div>
 
+                <div>
+                  <label className="label">Step 3: Anything to remove? (optional)</label>
+                  <div className="chips">
+                    {QUICK.map((w) => (
+                      <button
+                        key={w}
+                        type="button"
+                        className={"chip" + (chosen.includes(w) ? " on" : "")}
+                        onClick={() => toggleChip(w)}
+                      >
+                        {w}
+                      </button>
+                    ))}
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="or type your own, for example: pen, bottle"
+                    value={removePrompt}
+                    onChange={(e) => setRemovePrompt(e.target.value)}
+                  />
+                  <small className="muted">Cut-out works best when the product colour is different from the surface (for example a blue shirt on a white sheet). If the product disappears, choose "Keep my photo".</small>
+                </div>
+                                <div>
+                  <label className="label">Background</label>
+                  <div className="presets">
+                    <button type="button" className={"preset" + (cutout ? " active" : "")} onClick={() => setCutout(true)}>
+                      <b>Cut out product</b><small>White background</small>
+                    </button>
+                    <button type="button" className={"preset" + (!cutout ? " active" : "")} onClick={() => setCutout(false)}>
+                      <b>Keep my photo</b><small>Just enhance and square</small>
+                    </button>
+                  </div>
+                  <small className="muted">If the cut-out looks wrong, choose "Keep my photo".</small>
+                </div>
+
+                <label className="check">
+                  <input type="checkbox" checked={enhance} onChange={(e) => setEnhance(e.target.checked)} />
+                  Auto-enhance colour and lighting
+                </label>
+
                 <div className="row">
-                  <button className="btn btn-primary" onClick={run} disabled={!file} style={{ flex: 1 }}>Make it listing-ready</button>
+                  <button className="btn btn-primary" onClick={run} disabled={!file} style={{ flex: 1 }}>
+                    Make it listing-ready
+                  </button>
                   <button className="btn btn-ghost" onClick={demo}>Try demo</button>
                 </div>
               </div>
@@ -186,7 +249,7 @@ export default function Home() {
           <div className="card stack" style={{ maxWidth: 480, margin: "40px auto" }}>
             <h3 className="section-title">Making your photo listing-ready</h3>
             <Steps steps={STEPS} active={stepIdx} />
-            <p className="muted">This can take a few seconds.</p>
+            <p className="muted">This can take up to a minute.</p>
           </div>
         )}
 
@@ -207,11 +270,16 @@ export default function Home() {
                   </div>
                 )}
                 <p className="muted" style={{ marginBottom: 0 }}>Marketplace: <b>{result.preset}</b></p>
+                {result.removalFailed && (
+  <p style={{ color: "#f59e0b", marginBottom: 0 }}>
+    Object removal could not run on this photo, so it was skipped. The rest of the fixes were applied.
+  </p>
+)}
               </div>
 
               <div className="stack">
                 <div className="card"><ScoreGauge before={result.score.before} after={result.score.after} /></div>
-                <div className="card"><ScoreCard reasons={result.reasons} /></div>
+                <div className="card"><ScoreCard reasons={result.reasons} score={result.score} /></div>
               </div>
             </div>
 
