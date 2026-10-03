@@ -12,8 +12,8 @@ Built for the **Pixels to Products: Cloudinary AI Hackathon 2026** (Hack India) 
 <!-- Add a screenshot or GIF here -->
 <!-- ![ListingFix demo](./docs/demo.png) -->
 
-**Live demo:** _add link here_  
-**Demo video:** _add link here_
+**Live demo:** 
+**Demo video:** 
 
 ---
 
@@ -113,9 +113,9 @@ npm install
 Create a `.env.local` file in the project root:
 
 ```env
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
 ```
 
 You can find these values in your Cloudinary dashboard. Never commit `.env.local` to git.
@@ -169,10 +169,6 @@ Open [http://localhost:3000](http://localhost:3000). If port 3000 is busy, Next.
 - Aman Yadav ([@amanyadav2107](https://github.com/amanyadav2107))
 - Divyanshi ([@divyanshisrivastava395](https://github.com/divyanshisrivastava395))
 - Kanishka Shishodia ([KanishkaShishodia](https://github.com/KanishkaShishodia))
-
-## License
-
-Add a license of your choice (for example MIT) and update this section.
 
 ---
 
