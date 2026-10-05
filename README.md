@@ -70,17 +70,17 @@ Resolution cannot be fixed by this app. If your photo is too small, the reason s
 ## Run it locally
 
 ```bash
-git clone [YOUR REPO URL]
-cd [REPO FOLDER]
-npm install
+git clone [https://github.com/amanyadav2107/pixels-to-products-cloudinary-ai-hackathon-2026-cloudpixels]
+cd [pixels-to-products-cloudinary-ai-hackathon-2026-cloudpixels]
+npm install 
 ```
 
 Create a `.env.local` file in the project root with your Cloudinary credentials (use the variable names that `lib/cloudinary.js` reads):
 
 ```
-CLOUDINARY_CLOUD_NAME=
-CLOUDINARY_API_KEY=
-CLOUDINARY_API_SECRET=
+CLOUDINARY_CLOUD_NAME=duqqueqbs
+CLOUDINARY_API_KEY=417111987143721
+CLOUDINARY_API_SECRET=w2lRDiOi7isRDMJfxHQjD0WweuI
 ```
 
 Then start the app:
