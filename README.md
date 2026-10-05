@@ -6,6 +6,7 @@ Hackathon team repository for CloudPixels - [hackindia-team:pixels-to-products-c
 **Photo audit for online sellers.** Upload a phone photo of your product, get a 0-100 score with every lost point explained, and download a cleaned-up version that is closer to what marketplaces expect.
 
 **Live demo:** https://pixels-to-products-cloudinary-ai-ha-omega.vercel.app/
+**Video Link:**https://drive.google.com/file/d/1GK1nSiZrwcbM2bi4O0J4r0BFGmhPq0zV/view?usp=drivesdk
 
 **Team:** 
 - Aman Yadav ([@amanyadav2107](https://github.com/amanyadav2107)) ]
