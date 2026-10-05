@@ -7,7 +7,7 @@ Hackathon team repository for CloudPixels - [hackindia-team:pixels-to-products-c
 
 **Live demo:** https://pixels-to-products-cloudinary-ai-ha-omega.vercel.app/ 
 
-**Video Link:**https://drive.google.com/file/d/1GK1nSiZrwcbM2bi4O0J4r0BFGmhPq0zV/view?usp=drivesdk
+Video Link: https://drive.google.com/file/d/1GK1nSiZrwcbM2bi4O0J4r0BFGmhPq0zV/view?usp=drivesdk
 
 **Team:** 
 - Aman Yadav ([@amanyadav2107](https://github.com/amanyadav2107)) ]
